@@ -4,13 +4,16 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from pydantic import BaseModel
 from passlib.context import CryptContext
-from motor.motor_asyncio import AsyncIOMotorDatabase
+from pydantic import BaseModel
 from bson import ObjectId
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.config.settings import settings
 from app.database import get_database
+
+# Configuration du hachage des mots de passe
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Schéma de token
 class Token(BaseModel):
@@ -25,34 +28,15 @@ class TokenData(BaseModel):
 # Configuration de l'authentification OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
-# Configuration pour le hachage des mots de passe
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def verify_password(plain_password, hashed_password):
-    """Vérifie si le mot de passe en clair correspond au mot de passe haché"""
+    """Vérifier si un mot de passe en clair correspond à un mot de passe haché"""
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password):
-    """Génère un hash du mot de passe"""
+    """Générer un hash bcrypt pour un mot de passe"""
     return pwd_context.hash(password)
-
-
-async def get_user_by_email(email: str, db: AsyncIOMotorDatabase):
-    """Récupère un utilisateur par son email"""
-    user = await db.users.find_one({"email": email})
-    return user
-
-
-async def authenticate_user(email: str, password: str, db: AsyncIOMotorDatabase):
-    """Authentifie un utilisateur par email et mot de passe"""
-    user = await get_user_by_email(email, db)
-    if not user:
-        return False
-    if not verify_password(password, user["hashed_password"]):
-        return False
-    return user
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -100,14 +84,37 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return token_data.user_id
 
 
+async def get_user_by_email(email: str, db: AsyncIOMotorDatabase):
+    """Récupérer un utilisateur par son email"""
+    return await db.users.find_one({"email": email})
+
+
 async def get_user_or_404(user_id: str, db: AsyncIOMotorDatabase):
-    """Récupère un utilisateur par son ID ou renvoie une erreur 404"""
-    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    """Récupérer un utilisateur par son ID ou lever une exception 404"""
+    if not ObjectId.is_valid(user_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="ID d'utilisateur invalide"
+        )
     
+    user = await db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Utilisateur non trouvé"
         )
+    
+    return user
+
+
+async def authenticate_user(email: str, password: str, db: AsyncIOMotorDatabase):
+    """Authentifier un utilisateur avec email et mot de passe"""
+    user = await get_user_by_email(email, db)
+    
+    if not user:
+        return False
+    
+    if not verify_password(password, user["hashed_password"]):
+        return False
     
     return user

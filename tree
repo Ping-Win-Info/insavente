@@ -10,12 +10,18 @@
 │   ├── __init__.py
 │   ├── main.py
 │   ├── models
+│   │   ├── conversation.py
+│   │   ├── forum.py
 │   │   ├── __init__.py
 │   │   ├── item.py
+│   │   ├── rating.py
 │   │   └── user.py
 │   └── routers
 │       ├── auth.py
-│       └── items.py
+│       ├── conversations.py
+│       ├── forum.py
+│       ├── items.py
+│       └── users.py
 ├── docker-compose.yml
 ├── Dockerfile
 ├── LICENSE
@@ -24,7 +30,11 @@
 └── test
     ├── conftests.py
     ├── __init__.py
+    ├── test_auth_change_password.py
+    ├── test_conversations.py
+    ├── test_forum.py
     ├── test_items_advanced.py
     ├── test_items.py
     ├── test_performance.py
+    ├── test_user_profiles.py
     └── test_users.py

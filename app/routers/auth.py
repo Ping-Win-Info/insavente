@@ -1,5 +1,6 @@
 # app/routers/auth.py
 from datetime import datetime
+from app.auth.utils import verify_password
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -124,7 +125,13 @@ async def change_password(
         )
     
     # Valider le nouveau mot de passe
-    UserCreate.validate_password(new_password)
+    try:
+        UserCreate.validate_password(new_password)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e)
+        )
     
     # Hacher et enregistrer le nouveau mot de passe
     hashed_password = get_password_hash(new_password)

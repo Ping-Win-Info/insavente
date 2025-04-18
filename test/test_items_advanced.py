@@ -267,13 +267,12 @@ class TestItemsAdvanced:
         # Envoyer un JSON mal formaté
         response = client.post(
             "/api/items/",
-            data="{'title': 'Pas un JSON valide'",  # JSON mal formaté
+            content="{'title': 'Pas un JSON valide'",  # Utiliser content au lieu de data
             headers={
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json"
             }
         )
-        
         assert response.status_code == 422  # Unprocessable Entity
 
     # Tests de sécurité

@@ -31,6 +31,23 @@ sudo docker compose exec api pytest --cov=app --cov-report=term
 - **Connexion** : Authentification et génération de token JWT
 - **Profil utilisateur** : Récupération et mise à jour des informations de profil
 - **Changement de mot de passe** : Possibilité de modifier son mot de passe
+- **Évaluations utilisateurs** : Système permettant aux utilisateurs de s'évaluer mutuellement
+- **Vérification des droits** : Protection des routes selon les rôles et permissions
+
+### Messagerie privée
+
+- **Conversations** : Système de conversations privées entre utilisateurs
+- **Messagerie instantanée** : Envoi et réception de messages dans des conversations
+- **Statut de lecture** : Indication des messages lus/non lus
+- **Récupération des conversations** : Liste des conversations d'un utilisateur
+
+### Forum de discussion
+
+- **Catégories** : Organisation des discussions par thématiques
+- **Création de sujets** : Possibilité de créer de nouveaux sujets dans une catégorie
+- **Réponses aux sujets** : Système de messagerie dans les sujets
+- **Modération** : Fonctionnalités d'épinglage et verrouillage des sujets par les administrateurs
+- **Recherche** : Possibilité de rechercher dans les sujets du forum
 
 ### Sécurité
 
@@ -56,6 +73,27 @@ sudo docker compose exec api pytest --cov=app --cov-report=term
 - `GET /api/auth/me` : Récupérer les informations de l'utilisateur connecté
 - `PUT /api/auth/me` : Mettre à jour le profil utilisateur
 - `POST /api/auth/change-password` : Modifier le mot de passe
+- `GET /api/users/{user_id}` : Récupérer le profil public d'un utilisateur
+- `GET /api/users/{user_id}/ratings` : Récupérer les évaluations d'un utilisateur
+- `POST /api/users/{user_id}/ratings` : Créer une évaluation pour un utilisateur
+
+### Messagerie
+
+- `POST /api/conversations` : Démarrer une nouvelle conversation
+- `GET /api/conversations` : Récupérer la liste des conversations
+- `GET /api/conversations/{conversation_id}` : Récupérer une conversation avec ses messages
+- `POST /api/conversations/{conversation_id}/messages` : Envoyer un message dans une conversation
+- `PUT /api/conversations/{conversation_id}/read` : Marquer les messages comme lus
+
+### Forum
+
+- `GET /api/forum/categories` : Récupérer les catégories du forum
+- `POST /api/forum/threads` : Créer un nouveau sujet
+- `GET /api/forum/threads` : Récupérer la liste des sujets (filtrage optionnel par catégorie)
+- `GET /api/forum/threads/{thread_id}` : Récupérer un sujet avec ses messages
+- `POST /api/forum/threads/{thread_id}/posts` : Ajouter un message à un sujet
+- `PUT /api/forum/threads/{thread_id}/lock` : Verrouiller/déverrouiller un sujet (admin)
+- `PUT /api/forum/threads/{thread_id}/pin` : Épingler/désépingler un sujet (admin)
 
 ## Tests automatisés
 
@@ -70,6 +108,8 @@ L'application est testée avec Pytest et inclut plusieurs types de tests :
 - Filtrage et recherche avancés
 - Gestion des erreurs (ID invalides, JSON malformé, etc.)
 - Tests de sécurité (tokens expirés, droits d'accès, etc.)
+- Tests des systèmes de conversation et de messagerie
+- Tests du forum et de ses fonctionnalités de modération
 
 ### Tests de performance
 - Pagination avec grand volume de données

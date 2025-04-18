@@ -56,6 +56,7 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     id: str
+    email: Optional[EmailStr] = None  # Rendre l'email optionnel
     created_at: datetime
     updated_at: Optional[datetime] = None
     

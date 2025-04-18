@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.settings import settings
 from app.database import setup_mongodb_indexes
-from app.routers import items, auth  # Ajouter l'import du nouveau routeur
+from app.routers import items, auth, users, conversations, forum
 
 # Créer l'application FastAPI
 app = FastAPI(
@@ -23,8 +23,11 @@ app.add_middleware(
 )
 
 # Inclure les routers
+app.include_router(auth.router)
+app.include_router(users.router)
 app.include_router(items.router)
-app.include_router(auth.router)  # Ajouter le routeur d'authentification
+app.include_router(conversations.router)
+app.include_router(forum.router)
 
 # Événement de démarrage pour configurer la base de données
 @app.on_event("startup")
