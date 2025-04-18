@@ -1,18 +1,30 @@
 .
-├── app/
-│   ├── config/
-│   │   └── settings.py
-│   ├── models/
-│   │   └── item.py
-│   ├── routers/
-│   │   └── items.py
-│   ├── auth/
-│   │   └── utils.py
-│   ├── database.py
-│   └── main.py
-├── tests/
-│   ├── conftest.py
-│   └── test_items.py
-├── .env
+├── app
+│   ├── auth
+│   │   ├── __init__.py
+│   │   └── utils.py
+│   ├── config
+│   │   ├── __init__.py
+│   │   └── settings.py
+│   ├── database.py
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── item.py
+│   │   └── user.py
+│   └── routers
+│       ├── auth.py
+│       └── items.py
+├── docker-compose.yml
+├── Dockerfile
+├── LICENSE
+├── README.md
 ├── requirements.txt
-└── README.md
+└── test
+    ├── conftests.py
+    ├── __init__.py
+    ├── test_items_advanced.py
+    ├── test_items.py
+    ├── test_performance.py
+    └── test_users.py
