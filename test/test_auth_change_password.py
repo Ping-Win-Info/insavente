@@ -113,7 +113,7 @@ class TestChangePassword:
         """Test avec un nouveau mot de passe trop faible"""
         user = create_test_user
         
-        # Mot de passe sans caractère spécial
+        # 1. Mot de passe sans caractère spécial
         password_data = {
             "current_password": user["password"],
             "new_password": "NewPassword123"
@@ -128,7 +128,7 @@ class TestChangePassword:
         assert response.status_code == 422
         assert "caractère spécial" in response.json()["detail"].lower()
         
-        # Mot de passe sans chiffre
+        # 2. Mot de passe sans chiffre
         password_data = {
             "current_password": user["password"],
             "new_password": "NewPassword!"
@@ -143,7 +143,7 @@ class TestChangePassword:
         assert response.status_code == 422
         assert "chiffre" in response.json()["detail"].lower()
         
-        # Mot de passe trop court
+        # 3. Mot de passe trop court
         password_data = {
             "current_password": user["password"],
             "new_password": "Np1!"

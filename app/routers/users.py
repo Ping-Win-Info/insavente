@@ -16,7 +16,7 @@ router = APIRouter(
     responses={404: {"description": "Ressource non trouvée"}}
 )
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/{user_id}", response_model=UserResponse, response_model_exclude={"email"})
 async def get_user_profile(
     user_id: str = Path(..., title="ID de l'utilisateur à récupérer"),
     db: AsyncIOMotorDatabase = Depends(get_database)
@@ -39,10 +39,8 @@ async def get_user_profile(
             detail="Utilisateur non trouvé"
         )
     
-    # Convertir en réponse sans inclure le mot de passe
+    # Convertir en réponse
     user_data = UserModel.user_response_from_mongo(user)
-    if "email" in user_data:
-        del user_data["email"]
     return user_data
 
 

@@ -125,7 +125,13 @@ async def change_password(
         )
     
     # Valider le nouveau mot de passe
-    UserCreate.validate_password(new_password)
+    try:
+        UserCreate.validate_password(new_password)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e)
+        )
     
     # Hacher et enregistrer le nouveau mot de passe
     hashed_password = get_password_hash(new_password)
