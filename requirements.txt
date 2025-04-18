@@ -1,0 +1,15 @@
+fastapi==0.98.0
+uvicorn==0.22.0
+pymongo==4.4.0
+motor==3.2.0
+pydantic==1.10.10
+python-jose==3.3.0
+passlib==1.7.4
+python-multipart==0.0.6
+pytest==7.3.2
+pytest-cov==4.1.0
+httpx==0.24.1
+python-dotenv==1.0.0
+email-validator==2.0.0
+PyJWT==2.6.0
+# bson==0.5.10 a été supprimé pour éviter les conflits avec pymongo

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Service pour l'API FastAPI
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=social_marketplace
+      - JWT_SECRET=votre_secret_ultra_securise_pour_docker
+      - JWT_ALGORITHM=HS256
+      - JWT_EXPIRATION=3600
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Service pour MongoDB
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:

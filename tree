@@ -1,0 +1,18 @@
+.
+├── app/
+│   ├── config/
+│   │   └── settings.py
+│   ├── models/
+│   │   └── item.py
+│   ├── routers/
+│   │   └── items.py
+│   ├── auth/
+│   │   └── utils.py
+│   ├── database.py
+│   └── main.py
+├── tests/
+│   ├── conftest.py
+│   └── test_items.py
+├── .env
+├── requirements.txt
+└── README.md
