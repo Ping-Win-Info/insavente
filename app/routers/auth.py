@@ -1,5 +1,6 @@
 # app/routers/auth.py
 from datetime import datetime
+from app.auth.utils import verify_password
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm
 from motor.motor_asyncio import AsyncIOMotorDatabase
